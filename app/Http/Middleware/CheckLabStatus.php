@@ -22,10 +22,9 @@ class CheckLabStatus
 
         // Ambil semua laporan lab yang selesai (jam_selesai < sekarang)
         $laporanSelesai = LaporanLab::where('jam_selesai', '<', $currentTime)
-        ->where('exp','=', false)
-        ->orderBy('jam_selesai', 'asc') // Urutkan dari terlama ke terbaru
-        ->limit(16) // Batasi hingga 16 data
-        ->get();
+            ->where('exp', '=', false)
+            ->orderBy('jam_selesai', 'asc')
+            ->get();
         // dd($laporanSelesai);
         foreach ($laporanSelesai as $laporan) {
             $laporan->exp = true; // Mengatur nilai atribut
@@ -42,7 +41,6 @@ class CheckLabStatus
         // Ambil semua laporan lab yang sedang berlangsung
         $laporanBerjalan = LaporanLab::where('jam_mulai', '<=', $currentTime)
             ->where('jam_selesai', '>=', $currentTime)
-            ->limit(16) // Batasi hingga 16 data
             ->get();
 
         foreach ($laporanBerjalan as $laporan) {

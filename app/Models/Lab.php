@@ -21,4 +21,10 @@ class Lab extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function laporanLab()
+    {
+        return $this->hasOne(LaporanLab::class);
+    }
+    
+
 }

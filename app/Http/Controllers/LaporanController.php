@@ -112,7 +112,7 @@ class LaporanController extends Controller
             // return back()->with('err', 'kesalahan Data used');
             dd($lab->used, $lab);
         };
-        
+        // dd(Auth::user()->id);
         
         $id= LaporanLab::create([
             'lab_id' => $request->lab_id,
@@ -123,6 +123,7 @@ class LaporanController extends Controller
             'jam_selesai' => $request->jam_selesai,
             'network' => $request->network
         ]);
+
         
         Lab::find($validated['lab_id'])->update(['user_id' => Auth::user()->id ]);
 

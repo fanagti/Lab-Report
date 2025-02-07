@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\MonitorController;
 use App\Http\Controllers\Auth as ControllersAuth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GuruController;
@@ -22,10 +23,14 @@ Route::get('/', function () {
     return redirect("/login");
 })->name("login");
 
+
+
 Route::get('/api/mapel/{guru_id}', function ($guru_id) {
     $mapels = Mapel::where('guru_id', $guru_id)->get();
     return response()->json(['mapels' => $mapels]);
 });
+
+Route::get('/api/monitor',[MonitorController::class,'monitorData'])->middleware('labCheck');
 
 
 
@@ -33,6 +38,10 @@ Route::get('/api/mapel/{guru_id}', function ($guru_id) {
 
 Route::get('/login', [AuthController::class, 'loginPage'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/monitor', function () {
+    $labs = Lab::all();
+    return view('guest.monitor',['labs'=>$labs]);
+});
 
 //admin------------------------------------------------------
 Route::middleware(['auth', 'role:admin'])->group(function () {
