@@ -89,7 +89,10 @@ class LaporanController extends Controller
     public function formLaporanPage(){
         $labs = Lab::all();
         $gurus = Guru::all();
-        $laporan = LaporanLab::where('user_id', Auth::user()->id)->get();
+        $laporan = LaporanLab::where('user_id', Auth::user()->id)
+            ->orderBy('created_at', 'desc') // Urutkan dari terbaru ke terlama
+            ->limit(5) // Ambil hanya 5 data
+            ->get();
         // dd($laporan);
         return view('user.form-laporan', compact(['labs',
          'gurus',
@@ -102,7 +105,17 @@ class LaporanController extends Controller
             'lab_id' => 'required|exists:labs,id',
             'guru_id' => 'required|exists:gurus,id',
             'mapel_id' => 'required|exists:mapels,id',
-            'jam_mulai' => 'required|date_format:H:i',
+            'jam_mulai' =>  [
+                'required',
+                'date_format:H:i',
+                function ($attribute, $value, $fail) {
+                    $now = Carbon::now()->format('H:i');
+                    if ($value > $now) {
+                        // 0>1
+                        $fail('Jam Mulai harus kurang dari atau sama dengan waktu sekarang.');
+                    }
+                }
+            ],
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
         ]);
 

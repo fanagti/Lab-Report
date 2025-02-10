@@ -113,7 +113,7 @@
         }
 
         fetchData(); // Panggil saat pertama kali halaman dimuat
-        setInterval(fetchData, 90 * 1000); // Cek API setiap 15 detik
+        setInterval(fetchData,15 * 60 * 1000); // Cek API setiap 15 detik
     </script>
     <script>
         function updateTime() {

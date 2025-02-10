@@ -18,7 +18,7 @@
         }
 
         .container {
-            margin-top: 50px;
+            /* margin-top: 50px; */
             max-width: 1000px;
             /* Lebar container lebih besar */
         }
@@ -341,29 +341,64 @@
     </div>
 
 
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top ">
+        <div class="container">
+          <a class="navbar-brand" href="#">ELR</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a onclick="event.preventDefault();" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <div class="row  nav-link ms-2">
+                        History
+                    </div>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" 
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"class="text-body font-weight-bold px-0 nav-link ms-2 ms-md-4">
+                    Logout
+               </a>
+              </li>
+              <li class="nav-item">
+                <div class="col-md-6 mt-sm-0 d-block d-md-none">
 
+                    <!-- Daftar Lab -->
+                    @foreach ($labs as $lab)
+                        <div
+                            class="lab-item {{ $lab->status == 0 ? 'lab-disabled' : '' }}  {{ $lab->status == 1 ? ($lab->used == 1 ? 'border-used' : 'border-unused') : '' }}">
+                            <span>{{ $lab->name }} {{ $lab->user == null ? '' : '- ' . $lab->user->class }}</span>
+                            <!-- Nama lab di kiri -->
+                            <span
+                                class="status {{ $lab->status == 1 ? ($lab->used == 1 ? 'status-used' : 'status-unused') : '' }}">
+                                {{ $lab->status == 1 ? ($lab->used == 1 ? 'Used' : 'Unused') : 'Disable' }}
+                            </span> <!-- Status lab di kanan -->
+                        </div>
+                    @endforeach
+    
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
 
-    <div class="container">
+    <div class="container mt-md-5">
         <!-- Kolom Kiri: Form Input Laporan -->
         <div class="form-container row">
             <div class="row">
-                <div class="col-11">
+                <div class="col-md-12">
                     <h2>Form Laporan Penggunaan Lab</h2>
                 </div>
-                <div class="col-1">
+                <div class="col-md-1">
                     <div class="row">
                         <div class="col-6">
-                            <a onclick="event.preventDefault();" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                <div class="row mt-2">
-                                    <i class="fa-solid fa-clock-rotate-left fa-lg"></i>
-                                </div>
-                            </a>
+                           
                         </div>
                         <div class="col-6">
-                            <a href="#"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"class="text-body font-weight-bold px-0">
-                                <i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i>
-                            </a>
+                            
                         </div>
                     </div>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -448,20 +483,14 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-12">
-                        <select class="form-control">
-                            <option value="">07:00 -08:00</option>
-                            <option value="">08:00 - 10:00</option>
-                            <option value="">09:00 - 10:00</option>
-                        </select>
-                    </div>
+                    
                     <!-- Submit Button -->
                     <div class="d-flex justify-content-center mt-4">
                         <button type="submit" class="btn btn-submit">Simpan Laporan</button>
                     </div>
                 </form>
             </div>
-            <div class="col-md-6 mt-5 mt-sm-0">
+            <div class="col-md-6 mt-5 mt-sm-0 d-none d-md-block">
 
                 <!-- Daftar Lab -->
                 @foreach ($labs as $lab)

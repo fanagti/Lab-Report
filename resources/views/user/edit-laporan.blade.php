@@ -23,47 +23,36 @@
         </div>
 
         <div class="card p-4 mt-4 mb-3 shadow">
-            <div class="row">
-                <div class="col-3">
-                    <div class="row">
-                        
-                            <div class="mb-1 pc-detail p-1 rounded icon-box  has-item" id="monitor-">
+            <div class="row d-flex flex-column flex-md-row">
+                <div class="col-md-3 col-12 mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="mb-1 pc-detail p-1 rounded icon-box has-item" id="monitor-">
                             <span class="item-icon"><i class="fa-brands fa-hashnode"></i></span>
-                            
                         </div>
-                        <div class="col-6"><h6>Cick Icon</h6></div>
+                        <div class="ms-2"><h6>Click Icon</h6></div>
                     </div>
-
-
                 </div>
-                <div class="col-3">
-                    <div class="row">
-                        
-                            <div class="mb-1 pc-detail p-1 rounded icon-box  has-item" id="monitor-">
+                
+                <div class="col-md-3 col-12 mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="mb-1 pc-detail p-1 rounded icon-box has-item" id="monitor-">
                             <span class="item-icon"><i class="fa-brands fa-hashnode"></i></span>
-                            
                         </div>
-                        <div class="col-6"><h6>Ada</h6></div>
+                        <div class="ms-2"><h6>Ada</h6></div>
                     </div>
-
-
                 </div>
-                <div class="col-3">
-                    <div class="row">
-                        
-                            <div class="mb-1 pc-detail p-1 rounded icon-box  no-item" id="monitor-">
+        
+                <div class="col-md-3 col-12 mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="mb-1 pc-detail p-1 rounded icon-box no-item" id="monitor-">
                             <span class="item-icon"><i class="fa-brands fa-hashnode"></i></span>
-                            
                         </div>
-                        <div class="col-6"><h6>Tidak Ada</h6></div>
+                        <div class="ms-2"><h6>Tidak Ada</h6></div>
                     </div>
-
-
                 </div>
-
             </div>
-
         </div>
+        
 
         <div class="row">
             @foreach ($lab->pcs as $pc)
@@ -138,7 +127,7 @@
             @endforeach
         </div>
         <div class="row justify-content-center mb-5">
-            <div class="col-8 text-center">
+            <div class="col-md-8 text-center">
                 {{-- <button type="submit" class="btn btn-primary mb-3">Kirim</button> --}}
                 <button type="submit" class="btn btn-custom fw-bold "><i class="fas fa-paper-plane mr-2"></i> Kirim
                     Laporan</button>

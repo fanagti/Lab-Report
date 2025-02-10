@@ -55,10 +55,17 @@
                     <div class="mb-3">
                       <input type="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="email-addon" name="email">
                     </div>
+                    @error('email')
+                        <small class="text-danger">{{ $message }}</small>
+                        <br>
+                    @enderror
                     <label>Password</label>
                     <div class="mb-3">
                       <input type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="password-addon" name="password">
                     </div>
+                    @error('password')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                    
                     <div class="text-center">
                       <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">masuk</button>

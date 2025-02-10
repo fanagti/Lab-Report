@@ -7,50 +7,87 @@ use App\Models\LaporanLab;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Carbon\Carbon;
 
 class CheckLabStatus
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
-        date_default_timezone_set('Asia/Jakarta');
-        $currentTime = now()->toTimeString();
+        $currentTime = Carbon::now('Asia/Jakarta')->toTimeString(); // HH:MM:SS
+        $currentDate = Carbon::now('Asia/Jakarta')->toDateString(); // YYYY-MM-DD
+        // dd($currentDate);
+        
+        // 1. Update semua laporan dari hari sebelumnya menjadi expired
+        $expiredLabIds = LaporanLab::whereDate('created_at', '<', $currentDate)
+        ->where('exp', false)
+        ->pluck('lab_id')
+        ->toArray();
+        
+        // dd(!empty($expiredLabIds));
+        if (!empty($expiredLabIds)) { // Cek apakah ada data sebelum eksekusi
+            LaporanLab::whereDate('created_at', '<', $currentDate)
+                ->where('exp', false)
+                ->update(['exp' => true]);
 
-        // Ambil semua laporan lab yang selesai (jam_selesai < sekarang)
-        $laporanSelesai = LaporanLab::where('jam_selesai', '<', $currentTime)
-            ->where('exp', '=', false)
+            // 2. Update status lab jika lab_id ada di daftar expired
+            foreach ($expiredLabIds as $labId) {
+                $lab = Lab::find($labId);
+                if (!$lab) continue;
+
+                // Cek apakah ada laporan berjalan hari ini untuk lab ini
+                $laporanBerjalan = LaporanLab::whereDate('created_at', $currentDate)
+                    ->where('exp', false)
+                    ->where('lab_id', $lab->id)
+                    ->exists();
+
+                if (!$laporanBerjalan) {
+                    $lab->used = false;
+                    $lab->user_id = null;
+                    $lab->save();
+                }
+            }
+        }
+
+        // 3. Update laporan selesai menjadi expired
+        $laporanSelesai = LaporanLab::whereDate('created_at', $currentDate)
+            ->where('jam_selesai', '<', $currentTime)
+            ->where('exp', false)
             ->orderBy('jam_selesai', 'asc')
             ->get();
-        // dd($laporanSelesai);
-        foreach ($laporanSelesai as $laporan) {
-            $laporan->exp = true; // Mengatur nilai atribut
-            $laporan->save();
-            // Set lab terkait menjadi "tidak digunakan"
-            $lab = Lab::find($laporan->lab_id);
-            if ($lab) {
-                $lab->used = false;  // Atur lab menjadi "tidak digunakan"
-                $lab->user_id = null;  // Atur lab menjadi "tidak digunakan"
-                $lab->save();
+
+        if ($laporanSelesai->isNotEmpty()) { // Cek apakah ada data sebelum looping
+            foreach ($laporanSelesai as $laporan) {
+                $laporan->exp = true;
+                $laporan->save();
+
+                // Set lab terkait menjadi "tidak digunakan"
+                $lab = Lab::find($laporan->lab_id);
+                if ($lab) {
+                    $lab->used = false;
+                    $lab->user_id = null;
+                    $lab->save();
+                }
             }
         }
 
-        // Ambil semua laporan lab yang sedang berlangsung
-        $laporanBerjalan = LaporanLab::where('jam_mulai', '<=', $currentTime)
-            ->where('jam_selesai', '>=', $currentTime)
+        // 4. SET LAB SEDANG DIGUNAKAN JIKA ADA LAPORAN BERJALAN
+        $laporanBerjalan = LaporanLab::whereDate('created_at', $currentDate)
+            ->whereTime('jam_mulai', '<=', $currentTime)
+            ->whereTime('jam_selesai', '>=', $currentTime)
+            ->where('exp', false)
             ->get();
+            // dd($laporanBerjalan);
 
-        foreach ($laporanBerjalan as $laporan) {
-            // Set lab terkait menjadi "sedang digunakan"
-            $lab = Lab::find($laporan->lab_id);
-            if ($lab) {
-                $lab->used = true;  // Atur lab menjadi "sedang digunakan"
-                $lab->save();
+        if ($laporanBerjalan->isNotEmpty()) { // Cek apakah ada data sebelum looping
+            foreach ($laporanBerjalan as $laporan) {
+                $lab = Lab::find($laporan->lab_id);
+                if ($lab) {
+                    $lab->used = true;
+                    $lab->save();
+                }
             }
         }
+
         return $next($request);
     }
 }
