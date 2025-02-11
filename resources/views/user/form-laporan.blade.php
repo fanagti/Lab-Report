@@ -8,6 +8,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         body {
@@ -222,6 +223,7 @@
         .dropdown:hover .dropdown-content {
             display: block;
         }
+
         .custom-alert {
             position: fixed;
             top: -100px;
@@ -290,6 +292,63 @@
             color: #fff;
             border: 1px solid #82d05e;
         }
+
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        .text-gradient.text-info {
+            background-image: linear-gradient(310deg, #17cd3f, rgb(55, 209, 66));
+        }
+
+        .btn-submit:active {
+            background: white !important;
+            color: #17cd3f !important;
+            border: 1px solid #17cd3f;
+        }
+
+        .btn-submit:hover {
+            background: white !important;
+            color: #17cd3f !important;
+            border: 1px solid #17cd3f;
+        }
+
+        .btn-submit:focus {
+            background: white !important;
+            color: #17cd3f !important;
+            border: 1px solid #17cd3f;
+        }
+
+        .btn-no-bg {
+            background: none;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        /* Hover: Warna teks berubah */
+        /* .btn-no-bg:hover {
+            color: gray;
+        } */
+
+        /* Active: Warna lebih gelap saat ditekan */
+        .btn-no-bg:active {
+            color: darkgray;
+            transform: scale(0.98);
+        }
+
+        /* Focus: Tambahkan outline untuk aksesibilitas */
+        .btn-no-bg:focus {
+            outline: 2px solid black;
+            outline-offset: 3px;
+        }
     </style>
 </head>
 
@@ -343,47 +402,84 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top ">
         <div class="container">
-          <a class="navbar-brand" href="#">ELR</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a onclick="event.preventDefault();" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    <div class="row  nav-link ms-2">
-                        History
-                    </div>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" 
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"class="text-body font-weight-bold px-0 nav-link ms-2 ms-md-4">
-                    Logout
-               </a>
-              </li>
-              <li class="nav-item">
-                <div class="col-md-6 mt-sm-0 d-block d-md-none">
 
-                    <!-- Daftar Lab -->
-                    @foreach ($labs as $lab)
-                        <div
-                            class="lab-item {{ $lab->status == 0 ? 'lab-disabled' : '' }}  {{ $lab->status == 1 ? ($lab->used == 1 ? 'border-used' : 'border-unused') : '' }}">
-                            <span>{{ $lab->name }} {{ $lab->user == null ? '' : '- ' . $lab->user->class }}</span>
-                            <!-- Nama lab di kiri -->
-                            <span
-                                class="status {{ $lab->status == 1 ? ($lab->used == 1 ? 'status-used' : 'status-unused') : '' }}">
-                                {{ $lab->status == 1 ? ($lab->used == 1 ? 'Used' : 'Unused') : 'Disable' }}
-                            </span> <!-- Status lab di kanan -->
+            <h3 class="font-weight-bolder text-info text-gradient mt-1" style="font-weight: 700">ELR</h3>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+
+                        <div class="d-none d-md-block">
+
+                            <div class="dropdown ms-auto">
+                                <button class="btn btn-no-bg dropdown-toggle" type="button" id="dropdownMenuButton"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-user"></i> 
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="event.preventDefault();"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            <i class="fa-solid fa-clock-rotate-left me-2"></i> History
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" href="#"
+                                            onclick="confirmLogout(event);">
+                                            <i class="fa-solid fa-right-from-bracket me-2"></i> Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    @endforeach
-    
-                </div>
-              </li>
-            </ul>
-          </div>
+                        <div class="d-block d-md-none">
+                            <div class="d-flex justify-content-between">
+                                <a onclick="event.preventDefault();" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                    <div class="mt-2 text-center p-md-1 p-3">
+                                        <small><i class="fa-solid fa-clock-rotate-left fa-lg me-0"></small></i> History
+                                    </div>
+                                </a>
+
+                                <a href="#"
+                                    onclick="confirmLogout(event);"class="text-body font-weight-bold  nav-link ms-2 ms-md-4 text-center">
+                                    <div class="mt-md-1 text-center p-md-1 p-3">
+
+                                        <small><i class="fa-solid fa-right-from-bracket fa-lg me-1"></i></small>Logout
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                    </li>
+                    <li class="nav-item">
+                        <div class="col-md-6 mt-sm-0 d-block d-md-none">
+
+                            <!-- Daftar Lab -->
+                            @foreach ($labs as $lab)
+                                <div
+                                    class="lab-item {{ $lab->status == 0 ? 'lab-disabled' : '' }}  {{ $lab->status == 1 ? ($lab->used == 1 ? 'border-used' : 'border-unused') : '' }}">
+                                    <span>{{ $lab->name }}
+                                        {{ $lab->user == null ? '' : '- ' . $lab->user->class }}</span>
+                                    <!-- Nama lab di kiri -->
+                                    <span
+                                        class="status {{ $lab->status == 1 ? ($lab->used == 1 ? 'status-used' : 'status-unused') : '' }}">
+                                        {{ $lab->status == 1 ? ($lab->used == 1 ? 'Used' : 'Unused') : 'Disable' }}
+                                    </span> <!-- Status lab di kanan -->
+                                </div>
+                            @endforeach
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
-      </nav>
+    </nav>
 
     <div class="container mt-md-5">
         <!-- Kolom Kiri: Form Input Laporan -->
@@ -395,10 +491,10 @@
                 <div class="col-md-1">
                     <div class="row">
                         <div class="col-6">
-                           
+
                         </div>
                         <div class="col-6">
-                            
+
                         </div>
                     </div>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -464,7 +560,7 @@
 
                         <!-- Input Jam Mulai -->
                         <div class="col-md-6 mb-3 form-group">
-                            
+
                             <label for="jam_mulai" class="form-label">Jam Mulai</label>
                             <input type="time" class="form-control @error('jam_mulai') is-invalid @enderror"
                                 name="jam_mulai" id="jam_mulai" value="{{ old('jam_mulai') }}">
@@ -483,7 +579,7 @@
                             @enderror
                         </div>
                     </div>
-                    
+
                     <!-- Submit Button -->
                     <div class="d-flex justify-content-center mt-4">
                         <button type="submit" class="btn btn-submit">Simpan Laporan</button>
@@ -514,6 +610,34 @@
 
     <!-- Bootstrap JS Bundle (with Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+   function confirmLogout(event) {
+    event.preventDefault(); // Mencegah logout langsung
+
+    Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "kamu yakin akan logout!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, logout!",
+        cancelButtonText: "Batal"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: "Logging out...",
+                text: "Please wait...",
+                icon: "info",
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                document.getElementById("logout-form").submit();
+            });
+        }
+    });
+}
+    </script>
 
     <!-- Custom JS -->
     <script>
@@ -541,32 +665,32 @@
             }
         }
     </script>
-        <script>
-          function showAlert(message) {
-              // Membuat elemen alert baru
-              const alertElement = document.createElement('div');
-              alertElement.className = 'alert my-alert-success custom-alert show';
-              alertElement.innerHTML = '<i class="fa-solid fa-triangle-exclamation fa-lg"></i>' + '         ' + message;
-  
-              // Menambahkan elemen alert ke body
-              document.body.appendChild(alertElement);
-  
-              // Menghapus alert setelah 3 detik dengan animasi keluar
-              setTimeout(() => {
-                  alertElement.style.animation = "slideUp 0.5s ease-in-out forwards"; // Animasi keluar
-              }, 3000);
-  
-              // Menghapus elemen dari DOM setelah animasi selesai
-              setTimeout(() => {
-                  alertElement.remove();
-              }, 3500);
-          }
-  
-          // Menangkap pesan dari session
-          @if (session('success'))
-              showAlert("{{ session('success') }}");
-          @endif
-      </script>
+    <script>
+        function showAlert(message) {
+            // Membuat elemen alert baru
+            const alertElement = document.createElement('div');
+            alertElement.className = 'alert my-alert-success custom-alert show';
+            alertElement.innerHTML = '<i class="fa-solid fa-triangle-exclamation fa-lg"></i>' + '         ' + message;
+
+            // Menambahkan elemen alert ke body
+            document.body.appendChild(alertElement);
+
+            // Menghapus alert setelah 3 detik dengan animasi keluar
+            setTimeout(() => {
+                alertElement.style.animation = "slideUp 0.5s ease-in-out forwards"; // Animasi keluar
+            }, 3000);
+
+            // Menghapus elemen dari DOM setelah animasi selesai
+            setTimeout(() => {
+                alertElement.remove();
+            }, 3500);
+        }
+
+        // Menangkap pesan dari session
+        @if (session('success'))
+            showAlert("{{ session('success') }}");
+        @endif
+    </script>
 
 </body>
 
