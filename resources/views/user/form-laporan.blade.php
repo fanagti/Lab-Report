@@ -373,6 +373,9 @@
             </div>
 
             <div class="col-md-6">
+                @if($is_user_has_reported)
+                    <h5><b>{{ Auth::user()->class }} </b> melaporkan pengguaan lab<h5>
+                @else
                 <form action="/laporan-lab" method="POST">
                     @csrf
 
@@ -429,10 +432,10 @@
 
                         <!-- Input Jam Mulai -->
                         <div class="col-md-6 mb-3 form-group">
-                            
+
                             <label for="jam_mulai" class="form-label">Jam Mulai</label>
                             <input type="time" class="form-control @error('jam_mulai') is-invalid @enderror"
-                                name="jam_mulai" id="jam_mulai" value="{{ old('jam_mulai') }}">
+                                name="jam_mulai" id="jam_mulai" value="{{ old('jam_mulai') }}" lang="en-GB" step="60">
                             @error('jam_mulai')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -447,27 +450,29 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
-                    <div class="col-12">
-                        <select class="form-control">
-                            <option value="">07:00 -08:00</option>
-                            <option value="">08:00 - 10:00</option>
-                            <option value="">09:00 - 10:00</option>
-                        </select>
+
                     </div>
                     <!-- Submit Button -->
                     <div class="d-flex justify-content-center mt-4">
                         <button type="submit" class="btn btn-submit">Simpan Laporan</button>
                     </div>
                 </form>
+                @endif
             </div>
             <div class="col-md-6 mt-5 mt-sm-0">
 
                 <!-- Daftar Lab -->
                 @foreach ($labs as $lab)
+
                     <div
                         class="lab-item {{ $lab->status == 0 ? 'lab-disabled' : '' }}  {{ $lab->status == 1 ? ($lab->used == 1 ? 'border-used' : 'border-unused') : '' }}">
-                        <span>{{ $lab->name }} {{ $lab->user == null ? '' : '- ' . $lab->user->class }}</span>
+                        <span>{{ $lab->name }}
+
+                            @if ($lab->user != null)
+                                &ensp;<i class="fa fa-user" aria-hidden="true"></i> {{ $lab->user->class }}
+                                &ensp;<i class="fa fa-clock" aria-hidden="true"></i> {{ $lab->time_usage }}
+                            @endif
+                        </span>
                         <!-- Nama lab di kiri -->
                         <span
                             class="status {{ $lab->status == 1 ? ($lab->used == 1 ? 'status-used' : 'status-unused') : '' }}">
@@ -518,21 +523,21 @@
               const alertElement = document.createElement('div');
               alertElement.className = 'alert my-alert-success custom-alert show';
               alertElement.innerHTML = '<i class="fa-solid fa-triangle-exclamation fa-lg"></i>' + '         ' + message;
-  
+
               // Menambahkan elemen alert ke body
               document.body.appendChild(alertElement);
-  
+
               // Menghapus alert setelah 3 detik dengan animasi keluar
               setTimeout(() => {
                   alertElement.style.animation = "slideUp 0.5s ease-in-out forwards"; // Animasi keluar
               }, 3000);
-  
+
               // Menghapus elemen dari DOM setelah animasi selesai
               setTimeout(() => {
                   alertElement.remove();
               }, 3500);
           }
-  
+
           // Menangkap pesan dari session
           @if (session('success'))
               showAlert("{{ session('success') }}");

@@ -34,6 +34,7 @@ class CheckLabStatus
             if ($lab) {
                 $lab->used = false;  // Atur lab menjadi "tidak digunakan"
                 $lab->user_id = null;  // Atur lab menjadi "tidak digunakan"
+                $lab->time_usage = null;
                 $lab->save();
             }
         }

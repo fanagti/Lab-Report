@@ -28,8 +28,8 @@ class LaporanController extends Controller
         //  dd( Carbon::today());
         $todayForm = Carbon::parse($today)->toDateString();
         // dd($todayForm);
-    
-        
+
+
         return view('admin.laporan', compact('laporanLabs','today', 'todayForm'));
     }
     public function show($laporanId){
@@ -70,12 +70,12 @@ class LaporanController extends Controller
 
         // Kirim data ke tampilan
         return view('admin.laporan-detail', compact(
-        'laporan', 
-        'pcs', 
-        'detailLaporanLabs', 
-        'laporanId', 
-        'monitorTidakAda', 
-        'mouseTidakAda', 
+        'laporan',
+        'pcs',
+        'detailLaporanLabs',
+        'laporanId',
+        'monitorTidakAda',
+        'mouseTidakAda',
         'keyboardTidakAda',
         'pcTidakAda',
         'monitorAda',
@@ -87,13 +87,15 @@ class LaporanController extends Controller
 
     //user
     public function formLaporanPage(){
+        $is_user_has_reported = Lab::where('user_id', '=', Auth::user()->id)->get()->isNotEmpty();
         $labs = Lab::all();
         $gurus = Guru::all();
         $laporan = LaporanLab::where('user_id', Auth::user()->id)->get();
         // dd($laporan);
         return view('user.form-laporan', compact(['labs',
          'gurus',
-         'laporan',]));
+         'laporan',
+        'is_user_has_reported']));
     }
 
     public function formLaporan(Request $request) {
@@ -113,47 +115,68 @@ class LaporanController extends Controller
             dd($lab->used, $lab);
         };
         // dd(Auth::user()->id);
-        
-        $id= LaporanLab::create([
-            'lab_id' => $request->lab_id,
-            'guru_id' => $request->guru_id,
-            'mapel_id' => $request->mapel_id,
-            'user_id' => Auth::user()->id,
-            'jam_mulai' => $request->jam_mulai,
-            'jam_selesai' => $request->jam_selesai,
-            'network' => $request->network
-        ]);
 
-        
-        Lab::find($validated['lab_id'])->update(['user_id' => Auth::user()->id ]);
+        // persiapan untuk dhapus
+        // $id= LaporanLab::create([
+        //     'lab_id' => $request->lab_id,
+        //     'guru_id' => $request->guru_id,
+        //     'mapel_id' => $request->mapel_id,
+        //     'user_id' => Auth::user()->id,
+        //     'jam_mulai' => $request->jam_mulai,
+        //     'jam_selesai' => $request->jam_selesai,
+        //     'network' => $request->network
+        // ]);
 
-        return redirect()->route('lab-edit', ['labId' => $validated['lab_id'], 'id' => $id]);
+        $request->session()->put('lab_id', $request->lab_id);
+        $request->session()->put('guru_id', $request->guru_id);
+        $request->session()->put('mapel_id', $request->mapel_id);
+        $request->session()->put('jam_mulai', $request->jam_mulai);
+        $request->session()->put('jam_selesai', $request->jam_selesai);
+        $request->session()->put('network', $request->network);
+        // TODO pindah update lab ke lab-edit
+        // $time_usage = $request->jam_mulai." s.d. ".$request->jam_selesai;
+        // Lab::find($validated['lab_id'])->update([
+        //     'user_id' => Auth::user()->id,
+        //     'time_usage' => $time_usage
+        // ]);
+
+        return redirect()->route('lab-edit', ['labId' => $validated['lab_id']]);
     }
 
-    public function labLaporanPage($labId, $id) {
-        $lab = Lab::with('pcs')->findOrFail($labId); 
-        $laporanId = $id; // Mengambil lab beserta PC-nya
-        $labId = $labId;
-        
+    public function labLaporanPage($labId) {
+        $lab = Lab::with('pcs')->findOrFail($labId);
+
         // Mengambil lab beserta PC-nya
-        return view('user.edit-laporan', 
-        ["lab" => $lab, 
-        "laporanId" => $laporanId, // Mengambil lab beserta PC-nya
+        return view('user.edit-laporan',
+        ["lab" => $lab,
         "labId" => $labId,
         'id' => Auth::user()->id ]
     );  // Mengirim data lab ke view
     }
 
-    public function labLaporan(Request $request, $labId, $laporanId)  {
+    public function labLaporan(Request $request, $labId)  {
         // Validasi input jika diperlukan
         $request->validate([
             'network' => 'required'
         ]);
-        // dd($request->network);  
-        
-        Lab::where('id', $labId)->update(['network' => $request->network]);
-        LaporanLab::where('id', $laporanId)->update(['network' => $request->network]);
+        // dd($request->network);
 
+        $laporanId = LaporanLab::create([
+            'lab_id' => $request->session()->get('lab_id'),
+            'guru_id' => $request->session()->get('guru_id'),
+            'mapel_id' => $request->session()->get('mapel_id'),
+            'user_id' => Auth::user()->id,
+            'jam_mulai' => $request->session()->get('jam_mulai'),
+            'jam_selesai' => $request->session()->get('jam_selesai'),
+            'network' => $request->network
+        ]);
+
+        $time_usage = $request->session()->get('jam_mulai')." s.d. ".$request->session()->get('jam_selesai');
+        Lab::find($request->session()->get('lab_id'))->update([
+            'user_id' => Auth::user()->id,
+            'time_usage' => $time_usage,
+            'network' => $request->network
+        ]);
 
 
         // Loop melalui data PC yang dikirim
@@ -169,7 +192,7 @@ class LaporanController extends Controller
             if (!$hasMonitor || !$hasKeyboard || !$hasMouse || !$hasPc) {
                 // Jika ada perangkat *false*, simpan ke DetailLaporanLab
                 DetailLaporanLab::create([
-                    'laporan_lab_id' => $laporanId,
+                    'laporan_lab_id' => $laporanId->id,
                     'lab_id' => $labId,
                     'pc_id' => $pcId,
                     'has_monitor' => $hasMonitor,
@@ -179,10 +202,10 @@ class LaporanController extends Controller
                 ]);
             }
         }
-
+        $request->session()->forget(['lab_id', 'guru_id', 'mapel_id','user_id', 'jam_mulai', 'jam_selesai', 'network']);
         // Redirect dengan pesan sukses
         return redirect('/laporan-lab')->with('success', 'Laporan berhasil disimpan');
-    }   
+    }
 
 
     public function confirmDelete(Request $request)
@@ -196,15 +219,15 @@ class LaporanController extends Controller
             $today = Carbon::parse($today)->translatedFormat('j-F-Y');
             $todayForm = Carbon::parse($today)->toDateString();
         }else{
-            $today = '';    
-            $todayForm = '';    
+            $today = '';
+            $todayForm = '';
             $laporanLabs = null;
-        } 
-        
+        }
+
         // dd( $today  );
         // dd($todayForm);
-    
-        
+
+
         return view('admin.bersihkan', compact('laporanLabs','today', 'todayForm'));
     }
 

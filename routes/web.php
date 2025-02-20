@@ -48,7 +48,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 
     Route::get('/laporan',[LaporanController::class, 'index'])->name('laporan.index');
-    
     Route::get('/laporan/{laporanId}',[LaporanController::class,'show'])->name('laporan.detail');
 
     Route::get('/labs', [LabController::class,'index'])->middleware('labCheck');
@@ -75,9 +74,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('/bersihkan', [LaporanController::class, 'confirmDelete'])->name('laporan-labs.confirmDelete');
     Route::delete('/bersihkan', [LaporanController::class, 'deleteByDate'])->name('laporan-labs.delete');
-    
-
-
 });
 
 //all----------------------------------------------------------------------
@@ -86,9 +82,9 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 
     Route::post('/laporan-lab', [LaporanController::class,'formLaporan']);
 
-    Route::get('/lab/{labId}/laporan/{id}', [LaporanController::class, 'labLaporanPage'])->name('lab-edit');
+    Route::get('/lab/{labId}/laporan', [LaporanController::class, 'labLaporanPage'])->name('lab-edit');
 
-    Route::put('/pcs/update/{labId}/{laporanId}', [LaporanController::class, 'labLaporan'])->name('pcs.updateAll');
+    Route::put('/pcs/update/{labId}', [LaporanController::class, 'labLaporan'])->name('pcs.updateAll');
 
 });
 Route::middleware(['auth'])->group(function(){

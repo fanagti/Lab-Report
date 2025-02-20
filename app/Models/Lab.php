@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Lab extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'status', 'used', 'network', 'user_id'];
+    protected $fillable = ['name', 'status', 'used', 'network', 'user_id', 'time_usage'];
 
 
     // Relasi satu ke banyak dengan PC

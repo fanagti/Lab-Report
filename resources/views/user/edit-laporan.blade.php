@@ -1,6 +1,6 @@
 <x-layout-user>
 
-    <form action="{{ url('/pcs/update/' . $labId . '/' . $laporanId) }}" method="POST" class="submitForm">
+    <form action="{{ url('/pcs/update/' . $labId) }}" method="POST" class="submitForm">
         @csrf
         @method('PUT')
 
