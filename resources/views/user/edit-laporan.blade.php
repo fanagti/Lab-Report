@@ -1,6 +1,6 @@
 <x-layout-user>
 
-    <form action="{{ url('/pcs/update/' . $labId . '/' . $laporanId) }}" method="POST" class="submitForm"> 
+    <form action="{{ url('/pcs/update/' . $labId . '/' . $laporanId) }}" method="POST" class="submitForm">
         @csrf
         @method('PUT')
 
@@ -26,10 +26,10 @@
             <div class="row">
                 <div class="col-3">
                     <div class="row">
-                        
+
                             <div class="mb-1 pc-detail p-1 rounded icon-box  has-item" id="monitor-">
                             <span class="item-icon"><i class="fa-brands fa-hashnode"></i></span>
-                            
+
                         </div>
                         <div class="col-6"><h6>Cick Icon</h6></div>
                     </div>
@@ -38,10 +38,10 @@
                 </div>
                 <div class="col-3">
                     <div class="row">
-                        
+
                             <div class="mb-1 pc-detail p-1 rounded icon-box  has-item" id="monitor-">
                             <span class="item-icon"><i class="fa-brands fa-hashnode"></i></span>
-                            
+
                         </div>
                         <div class="col-6"><h6>Ada</h6></div>
                     </div>
@@ -50,10 +50,10 @@
                 </div>
                 <div class="col-3">
                     <div class="row">
-                        
+
                             <div class="mb-1 pc-detail p-1 rounded icon-box  no-item" id="monitor-">
                             <span class="item-icon"><i class="fa-brands fa-hashnode"></i></span>
-                            
+
                         </div>
                         <div class="col-6"><h6>Tidak Ada</h6></div>
                     </div>
@@ -72,7 +72,7 @@
                         <div class="d-flex flex-column flex-sm-row align-items-stretch">
                             <div
                                 class="bg-warning text-white d-flex justify-content-center align-items-center rounded p-2 flex-shrink-0 mb-2 mb-sm-0 col-12 col-sm-5">
-                                <strong>PC {{ $pc->id }}</strong>
+                                <strong>{{ $pc->name }}</strong>
                             </div>
 
                             <div class="flex-grow-1 pl-sm-2 d-flex justify-content-center">

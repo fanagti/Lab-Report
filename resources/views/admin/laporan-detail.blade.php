@@ -28,7 +28,7 @@
                             </div>
                             <div class="col-6 ">
                                 <h1 class="text-white">{{ $countLaporan }}</h1>
-                                
+
                             </div>
                         </div>
 
@@ -94,7 +94,7 @@
 
                         </div>
                     </div>
-                    
+
                     <div class="col-sm-4 col-11">
                         <div class="row g-1 ">
                             <div class="col-6 ">
@@ -175,7 +175,7 @@
                     <div class="d-flex flex-column flex-sm-row align-items-stretch">
                         <div
                             class="bg-warning text-white d-flex justify-content-center align-items-center rounded p-2 flex-shrink-0 mb-2 mb-sm-0 col-12 col-sm-4">
-                            <strong>pc {{ $pc->id }}</strong>
+                            <strong>{{ $pc->name }}</strong>
                         </div>
                         <div class="flex-grow-1 pl-sm-2 d-flex justify-content-center">
                             <div class="details d-flex flex-wrap justify-content-center">
