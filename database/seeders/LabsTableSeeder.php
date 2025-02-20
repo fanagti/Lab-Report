@@ -16,29 +16,29 @@ class LabsTableSeeder extends Seeder
     public function run()
     {
         DB::table('labs')->insert([
-                [
-                    'name' => 'Lab 1',
-                    'status' => true,
-                    'used' => false,
-                    'network' => true,
-                    'user_id' => null,
-                    'created_at' => now(),
-                    'updated_at' => now(),
+            [
+                'name' => 'Lab 1',
+                'status' => true,
+                'used' => false,
+                'network' => false,
+                'user_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'name' => 'Lab 2',
                 'status' => true,
                 'used' => false,
-                'network' => true,
+                'network' => false,
                 'user_id' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'Lab 3',
-                'status' => false,
+                'status' => true,
                 'used' => false,
-                'network' => true,
+                'network' => false,
                 'user_id' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -54,9 +54,9 @@ class LabsTableSeeder extends Seeder
             ],
             [
                 'name' => 'Lab 5',
-                'status' => false,
-                'used' => true,
-                'network' => true,
+                'status' => true,
+                'used' => false,
+                'network' => false,
                 'user_id' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
