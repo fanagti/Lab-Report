@@ -14,21 +14,89 @@ class MapelsTableSeeder extends Seeder
      */
     public function run()
     {
-        // Ambil ID guru
-        $guruIds = DB::table('gurus')->pluck('id');
-
-        foreach ($guruIds as $guruId) {
-            // Tentukan mata pelajaran untuk setiap guru
-            $mapels = ['Matematika', 'Fisika', 'Kimia'];
-
-            foreach ($mapels as $mapel) {
-                DB::table('mapels')->insert([
-                    'name' => $mapel,
-                    'guru_id' => $guruId,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-        }
+        DB::table('mapels')->insert([
+            [
+                'name' => 'Informatika',
+                'guru_id' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'Mapel Pilihan (Sistem Informasi)',
+                'guru_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'Dasar-Dasar Program Keahlian PPLG',
+                'guru_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'Project Kreatif dan Kewirausahaan',
+                'guru_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'Pemrograman Berbasis Teks, Grafis, dan Multimedia',
+                'guru_id' => 4,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'Pemrograman Perangkat Bergerak',
+                'guru_id' => 5,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'Dasar-Dasar Program Keahlian PPLG',
+                'guru_id' => 6,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'Informatika',
+                'guru_id' => 7,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'Basis Data',
+                'guru_id' => 8,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'Mapel Pilihan (Basis Data)',
+                'guru_id' => 8,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'Pemrograman Web',
+                'guru_id' => 8,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'Project Kreatif dan Kewirausahaan',
+                'guru_id' => 9,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'Mapel Pilihan (Basis Data)',
+                'guru_id' => 9,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'Pemrograman Berbasis Teks, Grafis, dan Multimedia',
+                'guru_id' => 10,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'Pemrograman Perangkat Bergerak',
+                'guru_id' => 10,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],[
+                'name' => 'Pemrograman Web',
+                'guru_id' => 11,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+    ]);
+        
     }
 }
