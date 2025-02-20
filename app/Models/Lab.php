@@ -9,12 +9,12 @@ class Lab extends Model
 {
     use HasFactory;
     protected $fillable = ['name', 'status', 'used', 'network', 'user_id'];
-    
+
 
     // Relasi satu ke banyak dengan PC
     public function pcs()
     {
-        return $this->hasMany(PC::class);
+        return $this->hasMany(Pc::class);
     }
     public function user()
     {
@@ -25,6 +25,6 @@ class Lab extends Model
     {
         return $this->hasOne(LaporanLab::class);
     }
-    
+
 
 }
