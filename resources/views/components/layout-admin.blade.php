@@ -50,7 +50,7 @@
       border-color: #17ad37 !important;
     }
     /* ------------------------------------------- */
-    
+
         .icon {
             font-size: 1.5rem;
             margin-right: 10px;
@@ -73,7 +73,7 @@
         .icon-orange {
             color: #e67e22;
         }
-        
+
         .my-card {
             border-radius: 10px;
             color: white;
@@ -138,8 +138,8 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          margin-right: 0.25em; 
-          margin-left: 0.25em; 
+          margin-right: 0.25em;
+          margin-left: 0.25em;
         }
 
         .incomplete::after {
@@ -153,7 +153,7 @@
           margin-right: -8px;
           background: red;
           border-radius: 50%;
-          padding: 0.2em 0.4em;
+          padding: 0.2em 0.8em;
         }
         .cbx{
           opacity: 0;
@@ -162,7 +162,7 @@
         }
         .cbx:checked{
           opacity: 0;
-          
+
         }
         .tooltip {
             position: absolute;
@@ -265,10 +265,10 @@
 </x-admin.sidebar>
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
       <x-admin.navbar>
-      
+
       </x-admin.navbar>
     <!-- Navbar -->
-    
+
     <!-- End Navbar -->
     <div class="container-fluid py-4">
         {{ $slot }}
